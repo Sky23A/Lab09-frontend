@@ -8,8 +8,12 @@ const apiClient = axios.create({
     'Content-Type': 'application/json'
   }
 })
+
 export default {
-  getOrganizers() {
-    return apiClient.get('/organizers')
+  getOrganizers(perPage, page) {
+    return apiClient.get('/organizers?_limit=' + perPage + '&_page=' + page)
+  },
+  saveOrganizer(organizers) {
+    return apiClient.post('/organizers', organizers)
   }
 }

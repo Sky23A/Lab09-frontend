@@ -2,30 +2,46 @@
   <div>
     <h1>Create an event</h1>
     <form @submit.prevent="saveEvent">
-      <BaseInput v-model="event.category" type="text" label="Category" />
+      <label>Category</label>
+      <input
+        v-model="event.category"
+        type="text"
+        placeholder="Category"
+        class="field"
+      />
       <h3>Name & describe your event</h3>
 
-      <BaseInput v-model="event.title" type="text" label="Title" />
-
-      <BaseInput v-model="event.description" type="text" label="Description" />
-
+      <label>Title</label>
+      <input
+        v-model="event.title"
+        type="text"
+        placeholder="Title"
+        class="field"
+      />
+      <br />
+      <label>Description</label>
+      <input
+        v-model="event.description"
+        type="text"
+        placeholder="Description"
+        class="field"
+      />
       <h3>Where is your event?</h3>
-
-      <BaseInput v-model="event.location" type="text" label="Location" />
-
-      <h3>Who is your organizer?</h3>
-      <BaseSelect :options="GStore.organizers" v-model="event.organizer.id" label="Select an Organizer" />
-
-      <button type="submit">Submit</button>
+      <label>Location</label>
+      <input
+        v-model="event.location"
+        type="text"
+        placeholder="Location"
+        class="field"
+      />
+      <button type="subnit">Submit</button>
     </form>
-
-    <pre>{{ event }}</pre>
+    <pre>{{ event }} </pre>
   </div>
 </template>
 
 <script>
-import EventService from '@/services/EventService.js'
-
+import EventService from '@/services/EventService'
 export default {
   inject: ['GStore'],
   data() {
@@ -34,8 +50,7 @@ export default {
         category: '',
         title: '',
         description: '',
-        location: '',
-        organizer: { id: '', name: '' }
+        location: ''
       }
     }
   },
@@ -49,15 +64,64 @@ export default {
             params: { id: response.data.id }
           })
           this.GStore.flashMessage =
-            'You are succcessfully add a new event for ' + response.data.title
+            'You are successfully add a new event for' + response.data.title
           setTimeout(() => {
             this.GStore.flashMessage = ''
           }, 3000)
         })
         .catch(() => {
-          this.$router.push('NetworkError')
+          this.$router.push({ name: 'NetworkError' })
         })
     }
   }
 }
 </script>
+
+<style scoped>
+h3 {
+  font-weight: bold;
+}
+input {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 20px;
+  margin-bottom: 5px;
+  text-align: left;
+  font-weight: bold;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  padding: 20px;
+  margin: auto;
+  margin-top: 40px;
+  border: 2px solid #d8d8d8;
+  border-radius: 10px;
+  background: #7faf58;
+  -webkit-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
+  -moz-box-shadow: 0px 2px 15px -12px rgba(0, 0, 0, 0.57);
+  box-shadow: 2px 15px -12px rgba(0, 0, 0, 0.57);
+}
+
+button {
+  display: block;
+  margin: auto;
+  margin-top: 25px;
+  background: #ffffff;
+  border: 2px solid #d8d8d8;
+  border-radius: 5px;
+  width: 40%;
+}
+
+@media only screen and (max-width: 600px) {
+  .comment-form {
+    width: 90%;
+  }
+}
+</style>
