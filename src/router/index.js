@@ -6,13 +6,12 @@ import AboutView from '../views/AboutView.vue'
 import EventLayoutView from '@/views/event/EventLayoutView.vue'
 import EventDetailView from '@/views/event/EventDetailView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import AddEvent from '@/views/EventForm.vue'
-import AddOrganizer from '@/views/OrganizerForm.vue'
-import OrganizerListView from '@/views/OrganizerListView.vue'
 import NetWorkErrorView from '@/views/NetworkErrorView.vue'
+import AddEvent from '@/views/EventForm.vue'
 import NProgress from 'nprogress'
 import GStore from '@/store'
 import EventService from '@/services/EventService'
+import OrganizerService from '@/services/OrganizerService'
 const routes = [
   {
     path: '/',
@@ -24,22 +23,6 @@ const routes = [
     path: '/about',
     name: 'about',
     component: AboutView
-  },
-  {
-    path: '/add-event',
-    name: 'AddEvent',
-    component: AddEvent
-  },
-  {
-    path: '/add-organizer',
-    name: 'AddOrganizer',
-    component: AddOrganizer
-  },
-  {
-    path: '/organizers',
-    name: 'OrganizerList',
-    component: OrganizerListView,
-    props: (route) => ({ page: parseInt(route.query.page) || 1 })
   },
   {
     path: '/event/:id',
@@ -82,6 +65,21 @@ const routes = [
         component: EventEditView
       }
     ]
+  },
+  {
+    path: '/add-event',
+    name: 'AddEvent',
+    component: AddEvent,
+    beforeEnter: () => {
+      return OrganizerService.getOrganizers()
+        .then((response) => {
+          GStore.organizers = response.data
+        })
+        .catch(() => {
+          GStore.organizers = null
+          console.log('cannot load organizers')
+        })
+    }
   },
   {
     path: '/404/:resource',
